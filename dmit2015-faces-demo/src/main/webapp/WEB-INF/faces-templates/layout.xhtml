@@ -56,8 +56,23 @@
                                 url="#{request.contextPath}/counter/scopeCounter-primefaces.xhtml"/>
                 </p:submenu>
 
-                <p:menuitem value="Weather Forecast" icon="pi pi-sun"
+                <p:menuitem value="Public Weather" icon="pi pi-sun"
                             url="#{request.contextPath}/weather/weather.xhtml"/>
+
+                <p:menuitem value="Owner Weather" icon="pi pi-sun"
+                            url="#{request.contextPath}/weather/firebaseAuthCrudWeatherDataOwner.xhtml"/>
+
+                <c:if test="${empty firebaseLoginSession.username}">
+                    <p:menuitem
+                            value="Login"
+                            action="/firebaseLogin" />
+                </c:if>
+                <c:if test="${not empty firebaseLoginSession.username}">
+                    <p:menuitem
+                            value="Logout #{firebaseLoginSession.username}"
+                            action="#{firebaseLogout.submit}" />
+                </c:if>
+
             </p:menubar>
         </h:form>
     </div>

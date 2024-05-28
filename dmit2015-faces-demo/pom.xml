@@ -18,6 +18,15 @@
     </properties>
 
     <dependencies>
+        <!-- Eclipse Microprofile is for building Microservices -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>6.1</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/net.datafaker/datafaker -->
         <dependency>
             <groupId>net.datafaker</groupId>
@@ -151,13 +160,14 @@
                 <!-- mvn wildfly-jar:dev-watch -->
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-jar-maven-plugin</artifactId>
-                <version>11.0.1.Final</version>
+                <version>11.0.2.Final</version>
                 <configuration>
                     <feature-pack-location>wildfly@maven(org.jboss.universe:community-universe)#32.0.0.Final</feature-pack-location>
                     <layers>
                         <!-- https://docs.wildfly.org/32/Bootable_Guide.html#wildfly_layers -->
                         <layer>cloud-server</layer>
                         <layer>jsf</layer>
+                        <layer>microprofile-rest-client</layer>
                         <layer>microprofile-config</layer>
                     </layers>
                     <excluded-layers>
