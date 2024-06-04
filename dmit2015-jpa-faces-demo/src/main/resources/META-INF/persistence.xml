@@ -54,6 +54,17 @@
         </properties>
     </persistence-unit>
 
+
+    <persistence-unit name="oracle-jpa-user2015-pu" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:app/datasources/oracleUser2015DS</jta-data-source>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
+
+        </properties>
+    </persistence-unit>
+
     <!--    <persistence-unit name="resource-local-oracle-jpa-hr-pu" transaction-type="RESOURCE_LOCAL">-->
     <!--        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
 
