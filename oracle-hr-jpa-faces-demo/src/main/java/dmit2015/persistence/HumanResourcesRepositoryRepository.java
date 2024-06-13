@@ -21,6 +21,37 @@ public class HumanResourcesRepositoryRepository {
     @PersistenceContext (unitName="oracle-jpa-hr-pu")
     private EntityManager _entityManager;
 
+    public Job findJobByJobTitle(String jobTitle) {
+        var query = _entityManager.createQuery("""
+select j from Job j where j.jobTitle = :jobTitleValue
+""", Job.class);
+        query.setParameter("jobTitleValue",jobTitle);
+        return query.getSingleResult();
+    }
+
+    public List<String> findJobTitlesByPartialValue(String jobTitle) {
+        var query = _entityManager.createQuery("""
+select j.jobTitle
+from Job j
+where lower(j.jobTitle) like :jobTitleValue
+order by j.jobTitle
+""", String.class);
+        query.setParameter("jobTitleValue", "%" + jobTitle.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+    public List<Job> findJobsByPartialValue(String jobTitle) {
+        var query = _entityManager.createQuery("""
+select j
+from Job j
+where lower(j.jobTitle) like :jobTitleValue
+order by j.jobTitle
+""", Job.class);
+        query.setParameter("jobTitleValue", "%" + jobTitle.toLowerCase() + "%");
+        return query.getResultList();
+    }
+
+
     /**
      * Return a list of Job sorted by the JobTitle
      * @return a list of Job sorted by jobTitle
