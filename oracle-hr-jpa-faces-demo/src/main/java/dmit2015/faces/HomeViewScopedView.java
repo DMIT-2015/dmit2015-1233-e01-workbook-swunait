@@ -1,7 +1,7 @@
 package dmit2015.faces;
 
 import dmit2015.entity.Job;
-import dmit2015.persistence.HumanResourcesRepositoryRepository;
+import dmit2015.persistence.HumanResourcesRepository;
 import jakarta.inject.Inject;
 import lombok.Getter;
 import org.omnifaces.util.Messages;
@@ -26,7 +26,7 @@ public class HomeViewScopedView implements Serializable {
 
     // Declare private fields for internal usage only objects
     @Inject
-    private HumanResourcesRepositoryRepository _hrRepository;
+    private HumanResourcesRepository _hrRepository;
 
     @PostConstruct // This method is executed after DI is completed (fields with @Inject now have values)
     public void init() { // Use this method to initialized fields instead of a constructor
@@ -40,5 +40,6 @@ public class HomeViewScopedView implements Serializable {
 
     public void onClear() {
         // Set all fields to default values
+
     }
 }
