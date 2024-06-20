@@ -7,4 +7,27 @@
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
+
+    <error-page>
+        <exception-type>org.apache.shiro.authz.UnauthenticatedException</exception-type>
+        <location>/shiroLogin.xhtml</location>
+    </error-page>
+    <error-page>
+        <exception-type>org.apache.shiro.authz.UnauthorizedException</exception-type>
+        <location>/errorpages/403.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>401</error-code>
+        <location>/errorpages/401.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/errorpages/403.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorpages/404.xhtml</location>
+    </error-page>
+
 </web-app>

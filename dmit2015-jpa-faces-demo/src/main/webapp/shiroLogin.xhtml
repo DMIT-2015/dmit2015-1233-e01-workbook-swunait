@@ -1,0 +1,81 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:faces="jakarta.faces"
+        xmlns:ui="jakarta.faces.facelets"
+        xmlns:f="jakarta.faces.core"
+        xmlns:h="jakarta.faces.html"
+        xmlns:pt="jakarta.faces.passthrough"
+        xmlns:cc="jakarta.faces.composite"
+        xmlns:c="jakarta.tags.core"
+        xmlns:fn="jakarta.tags.functions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:of="http://omnifaces.org/functions"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:shiro="http://shiro.apache.org/tags"
+        template="/WEB-INF/faces-templates/layout.xhtml"
+>
+
+    <ui:param name="title" value="Shiro Login"/>
+
+    <ui:define name="maincontent">
+
+        <h1>Shiro Login</h1>
+
+        <p:growl id="growl"/>
+
+        <h:form prependId="false" id="form" styleClass="flex justify-content-center flex-wrap">
+            <p:focus context="formPanel"/>
+
+            <p:panel id="formPanel" header="Please sign in">
+                <div class="ui-fluid">
+                    <!--Display all messages in FacesContext -->
+                    <p:messages id="messages" showDetail="true">
+                        <p:autoUpdate/>
+                    </p:messages>
+
+                    <c:if test="#{authc.loginFailure}">
+                        <div class="field ui-message-error">
+                            Invalid login credentails.
+                        </div>
+                    </c:if>
+
+                    <div class="field ">
+                        <p:outputLabel for="username" value="Username"/>
+                        <p:inputText id="username"
+                                     placeholder="enter your username here"
+                                     required="true"
+                                     requiredMessage="Username field cannot be blank."
+                        >
+                        </p:inputText>
+                    </div>
+
+                    <div class="field ">
+                        <p:outputLabel for="password" value="Password"/>
+                        <p:password id="password"
+                                    placeholder="enter your password here"
+                                    required="true"
+                                    requiredMessage="Password field cannot be blank."
+                        >
+                        </p:password>
+                    </div>
+
+                    <div class="field ">
+                        <p:selectBooleanCheckbox id="rememberMe" itemLabel="Remember Me"/>
+                    </div>
+
+                    <div class="field ">
+                        <p:commandButton value="Login"
+                                         icon="pi pi-sign-in"
+                                         ajax="false"
+                        />
+                    </div>
+
+                </div>
+
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
