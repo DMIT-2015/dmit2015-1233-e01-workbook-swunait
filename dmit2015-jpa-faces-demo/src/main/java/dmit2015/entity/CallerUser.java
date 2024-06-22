@@ -2,19 +2,19 @@ package dmit2015.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 import lombok.Setter;
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * This Jakarta Persistence class is mapped to a relational database table with the same name.
@@ -25,36 +25,32 @@ import java.util.logging.Logger;
  * The @Transient annotation can be used on field that is not mapped to a database table column.
  */
 @Entity
-@Table(name="MultiUserWeatherInfo")
+//@Table(schema = "CustomSchemaName", name="CustomTableName")
 @Getter
 @Setter
-public class WeatherData implements Serializable {
+public class CallerUser implements Serializable {
 
-    private static final Logger _logger = Logger.getLogger(WeatherData.class.getName());
-
-    @Column(length = 32, nullable = false)
-    private String username;
+    private static final Logger _logger = Logger.getLogger(CallerUser.class.getName());
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // @Column(name = "ColumnName", nullable = false)
-    private Long id;
+    @Size(min=3, max=32, message="Enter a username that contains {min} to {max} characters")
+    @Column(length=32, unique=true, nullable=false)
+    private String username;
 
-    private String city;
+    @Column(nullable=false)
+    private String password;
 
-    @Column(name = "weather_date")
-    private LocalDate date;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "CallerGroup", joinColumns = {@JoinColumn(name = "username")})
+    @Column(name = "groupname", nullable = false)
+    private Set<String> groups = new HashSet<>();
 
-    private int temperatureCelsius;
-
-    private String description;
-
-    @Transient
-    public int getTemperatureFahrenheit() {
-        return (int) (32 + temperatureCelsius / 0.5556);
+    public String getCsvGroups() {
+        return groups.stream().collect(Collectors.joining(","));
     }
 
-    public WeatherData() {
+
+    public CallerUser() {
 
     }
 
@@ -79,29 +75,30 @@ public class WeatherData implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return (
-                (obj instanceof WeatherData other) &&
-                        Objects.equals(id, other.id)
+                (obj instanceof CallerUser other) &&
+                        Objects.equals(username, other.username)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(username);
     }
 
 
-    public static Optional<WeatherData> parseCsv(String line) {
+    public static Optional<CallerUser> parseCsv(String line) {
         final var DELIMITER = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
         String[] tokens = line.split(DELIMITER, -1);  // The -1 limit allows for any number of fields and not discard trailing empty fields
         /*
-         * The order of the columns are:
-         * 0 - column1
-         * 1 - column2
-         * 2 - column3
-         * 3 - column4
+         * The order of the columns are: FirstName,LastName,LogonName,PhoneNumber,Department
+         * 0 - FirstName
+         * 1 - LastName
+         * 2 - LogonName
+         * 3 - PhoneNumber
+         * 4 - Department
          */
-        if (tokens.length == 4) {
-            WeatherData parsedWeatherData = new WeatherData();
+        if (tokens.length == 5) {
+            CallerUser parsedCallerUser = new CallerUser();
 
             try {
                 // String stringColumnValue = tokens[0].replaceAll("\"","");
@@ -112,10 +109,18 @@ public class WeatherData implements Serializable {
                 // Double DoubleColumnValue = tokens[0].isBlank() ? null : Double.valueOf(tokens[0]);
                 // int intColumnValue = tokens[0].isBlank() ? 0 : Integer.parseInt(tokens[0]);
                 // double doubleColumnValue = tokens[0].isBlank() ? 0 : Double.parseDouble(tokens[0]);
+                String username = tokens[2];
+                String role = tokens[4];
 
-                // parsedWeatherData.setProperty1(column1Value);
+                parsedCallerUser.setUsername(username);
 
-                return Optional.of(parsedWeatherData);
+                PasswordService passwordService = new DefaultPasswordService();
+                String hashedPassword = passwordService.encryptPassword("Password2015");
+                parsedCallerUser.setPassword(hashedPassword);
+
+                parsedCallerUser.groups.add(role);
+
+                return Optional.of(parsedCallerUser);
             } catch (Exception ex) {
                 _logger.log(Level.FINE, ex.getMessage(), ex);
             }
