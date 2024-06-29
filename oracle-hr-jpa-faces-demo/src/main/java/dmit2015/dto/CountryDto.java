@@ -1,5 +1,8 @@
 package dmit2015.dto;
 
+import lombok.Data;
+
+@Data
 public class CountryDto {
 
     private String id;

@@ -26,7 +26,7 @@ public interface CountryMapper {
      @Mappings({
          @Mapping(target = "id", source = "countryId"),
          @Mapping(target = "name", source = "countryName"),
-         @Mapping(target = "regionId", source = "region.regionId"),
+         @Mapping(target = "regionId", source = "region.id"),
          @Mapping(target = "regionName", source = "region.regionName"),
      })
     CountryDto toDto(Country entity);

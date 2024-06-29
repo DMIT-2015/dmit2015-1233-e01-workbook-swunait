@@ -25,7 +25,13 @@ public class RegionRepository {
     public void add(@Valid Region newRegion) {
         // If the primary key is not an identity column then write code below here to
         // 1) Generate a new primary key value
+        Long nextId = _entityManager.createQuery("""
+select max(r.id) + 10
+from Region r
+""", Long.class)
+                .getSingleResult();
         // 2) Set the primary key value for the new entity
+        newRegion.setId(nextId);
 
         _entityManager.persist(newRegion);
     }
