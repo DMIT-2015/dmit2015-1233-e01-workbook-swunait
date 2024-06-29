@@ -1,0 +1,79 @@
+# curl 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]'
+#-H 'Content-Type: application/json'
+#--data-binary '{"email":"[user@example.com]","password":"[PASSWORD]","returnSecureToken":true}'
+POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{FIREBASE_WEBAPI_KEY}}
+Content-Type: application/json
+
+{
+  "email": "user01@dmit2015.ca",
+  "password": "Password2015",
+  "returnSecureToken": true
+}
+
+###
+
+POST https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{FIREBASE_WEBAPI_KEY}}
+Content-Type: application/json
+
+{
+  "email": "user02@dmit2015.ca",
+  "password": "Password2015",
+  "returnSecureToken": true
+}
+
+### Push new JSON data to the path
+POST https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherDataOwner/{{localId}}.json?auth={{idToken}}
+Content-Type: application/json
+
+{
+  "city": "Edmonton",
+  "date": "2024-05-17",
+  "temperatureCelsius": 15,
+  "description": "cloudy and raining"
+}
+
+### Push new JSON data to the path
+POST https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherDataOwner/{{localId}}.json?auth={{idToken}}
+Content-Type: application/json
+
+{
+  "city": "Vancouver",
+  "date": "2024-05-16",
+  "temperatureCelsius": 25,
+  "description": "hot and try"
+}
+
+### Push new JSON data to the path
+POST https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherDataOwner/{{localId2}}.json?auth={{idToken2}}
+Content-Type: application/json
+
+{
+  "city": "Toronto",
+  "date": "2024-05-22",
+  "temperatureCelsius": 22,
+  "description": "Warm and cool"
+}
+
+### Read JSON data by path
+GET https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherDataOwner/{{localId2}}.json?auth={{idToken2}}
+
+### Read JSON data by path
+GET https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherDataOwner/{{localId}}.json?auth={{idToken}}
+
+### Read JSON data by path and primary key value
+GET https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherData/-Ny7rCwx-fjxJt3bdB1q.json
+
+### Write JSON data - will replace all properties with the properties in the request body - if you miss a property it will be removed
+PUT https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherData/-Ny7rCwx-fjxJt3bdB1q.json
+Content-Type: application/json
+
+{
+  "city": "Vancouver Canuks",
+  "date": "2024-05-16",
+  "temperatureCelsius": 30,
+  "description": "we won the game"
+}
+
+### Remove JSON data - use this if you want to delete data
+DELETE https://dmit2015-1233-swu-fbauth-default-rtdb.asia-southeast1.firebasedatabase.app/WeatherData/-Ny7qs-_Npqh_aPlgGDq.json
+

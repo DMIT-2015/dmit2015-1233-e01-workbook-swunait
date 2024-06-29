@@ -1,0 +1,180 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:faces="jakarta.faces"
+        xmlns:ui="jakarta.faces.facelets"
+        xmlns:f="jakarta.faces.core"
+        xmlns:h="jakarta.faces.html"
+        xmlns:pt="jakarta.faces.passthrough"
+        xmlns:cc="jakarta.faces.composite"
+        xmlns:c="jakarta.tags.core"
+        xmlns:fn="jakarta.tags.functions"
+        xmlns:o="http://omnifaces.org/ui"
+        xmlns:of="http://omnifaces.org/functions"
+        xmlns:p="http://primefaces.org/ui"
+        template="/WEB-INF/faces-templates/layout.xhtml"
+>
+
+    <ui:param name="title" value="FirebaseRTDB WeatherDataOwner - CRUD"/>
+
+    <ui:param name="internalstyles"
+              value=".WeatherDataOwners-table-header { display: flex; align-items:center; justify-content: space-between; flex-wrap: wrap; }"/>
+
+    <ui:define name="maincontent">
+        <f:metadata>
+            <f:viewAction action="#{firebaseLoginSession.checkForToken}"/>
+        </f:metadata>
+
+        <div class="card">
+            <h:form id="form" prependId="false">
+                <p:growl id="growl" showDetail="true">
+                    <p:autoUpdate/>
+                </p:growl>
+
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton id="createButton"
+                                         value="New" icon="pi pi-plus"
+                                         actionListener="#{currentWeatherDataOwnerFirebaseAuthCrudView.onOpenNew}"
+                                         update=":dialogs:manage-WeatherDataOwner-content"
+                                         oncomplete="PF('manageWeatherDataOwnerDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:manage-WeatherDataOwner-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="dt-WeatherDataOwners" widgetVar="dtWeatherDataOwners"
+                             value="#{currentWeatherDataOwnerFirebaseAuthCrudView.weatherDataOwners}"
+                             rendered="#{not empty currentWeatherDataOwnerFirebaseAuthCrudView.weatherDataOwners}"
+                             var="currentItem"
+                             reflow="true"
+                             selection="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner}"
+                             rowKey="#{currentItem.name}"
+                             paginator="true" rows="10"
+                             paginatorPosition="bottom">
+
+                    <f:facet name="header">
+                        <div class="WeatherDataOwners-table-header">
+                            <span style="font-weight: bold">WeatherDataOwners</span>
+                            <span class="filter-container ui-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtWeatherDataOwners').filter()"
+                                             placeholder="Search"/>
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column headerText="City">
+                        <h:outputText value="#{currentItem.city}"/>
+                    </p:column>
+                    <p:column headerText="Date">
+                        <h:outputText value="#{currentItem.date}"/>
+                    </p:column>
+                    <p:column headerText="TempC">
+                        <h:outputText value="#{currentItem.temperatureCelsius}"/>
+                    </p:column>
+                    <p:column headerText="Description">
+                        <h:outputText value="#{currentItem.description}"/>
+                    </p:column>
+
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-WeatherDataOwner-content"
+                                         oncomplete="PF('manageWeatherDataOwnerDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener value="#{currentItem}"
+                                                         target="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner}"/>
+                            <f:setPropertyActionListener value="#{currentItem.name}"
+                                                         target="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedId}"/>
+                            <p:resetInput target=":dialogs:manage-WeatherDataOwner-content"/>
+                        </p:commandButton>
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                         process="@this"
+                                         oncomplete="PF('deleteWeatherDataOwnerDialog').show()">
+                            <f:setPropertyActionListener value="#{currentItem}"
+                                                         target="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner}"/>
+                            <f:setPropertyActionListener value="#{currentItem.name}"
+                                                         target="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedId}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog header="WeatherDataOwner Details" showEffect="fade" modal="true"
+                          widgetVar="manageWeatherDataOwnerDialog"
+                          responsive="true">
+
+                    <p:messages id="messages">
+                        <p:autoUpdate/>
+                    </p:messages>
+
+                    <p:outputPanel id="manage-WeatherDataOwner-content" class="ui-fluid">
+                        <p:outputPanel
+                                rendered="#{not empty currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner}">
+
+                            <div class="field">
+                                <p:outputLabel for="@next">City</p:outputLabel>
+                                <p:inputText
+                                        id="city"
+                                        value="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner.city}">
+                                </p:inputText>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="@next">Date</p:outputLabel>
+                                <p:inputText
+                                        id="date"
+                                        value="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner.date}">
+                                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd" />
+                                </p:inputText>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="@next">Temperature Celsius</p:outputLabel>
+                                <p:inputText
+                                        id="temperatureCelsius"
+                                        value="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner.temperatureCelsius}">
+                                </p:inputText>
+                            </div>
+                            <div class="field">
+                                <p:outputLabel for="@next">Description</p:outputLabel>
+                                <p:inputText
+                                        id="description"
+                                        value="#{currentWeatherDataOwnerFirebaseAuthCrudView.selectedWeatherDataOwner.description}">
+                                </p:inputText>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{currentWeatherDataOwnerFirebaseAuthCrudView.onSave}"
+                                         update="manage-WeatherDataOwner-content"
+                                         process="manage-WeatherDataOwner-content @this"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         onclick="PF('manageWeatherDataOwnerDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="deleteWeatherDataOwnerDialog" showEffect="fade" width="300"
+                                 message="Delete the WeatherDataOwner?" header="Confirm" severity="warn">
+                    <p:commandButton value="Yes" icon="pi pi-check"
+                                     actionListener="#{currentWeatherDataOwnerFirebaseAuthCrudView.onDelete}"
+                                     process="@this"
+                                     oncomplete="PF('deleteWeatherDataOwnerDialog').hide()"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('deleteWeatherDataOwnerDialog').hide()"/>
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
