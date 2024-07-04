@@ -14,7 +14,7 @@ public class TodoItem implements Serializable {
 
     private Long id;
 
-    @NotBlank(message = "Name value cannot be blank.")
+//    @NotBlank(message = "Name value cannot be blank.")
     private String name;
 
     private boolean complete;
