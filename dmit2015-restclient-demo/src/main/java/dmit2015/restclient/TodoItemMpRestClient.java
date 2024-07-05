@@ -1,7 +1,6 @@
 package dmit2015.restclient;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.json.JsonObject;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
@@ -40,7 +39,7 @@ import java.util.List;
  * </code>
  */
 @RequestScoped
-@RegisterProvider(RestApiResponseMapper.class)
+@RegisterProvider(TodoItemRestApiResponseMapper.class)
 @RegisterRestClient(baseUri = "http://localhost:8090/restapi/TodoItemsDto")
 public interface TodoItemMpRestClient {
 

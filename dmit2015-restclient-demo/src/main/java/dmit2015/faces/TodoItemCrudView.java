@@ -58,7 +58,6 @@ public class TodoItemCrudView implements Serializable {
                 Messages.addFlashGlobalInfo("Create was successful. {0}", idValue);
                 todoItemList = _todoItemMpRestClient.findAll();
             } catch (Exception e) {
-                e.printStackTrace();
                 Messages.addGlobalError("Create was not successful. {0}", e.getMessage());
             }
         } else {
@@ -66,13 +65,12 @@ public class TodoItemCrudView implements Serializable {
                 _todoItemMpRestClient.update(editId, selectedTodoItem);
                 Messages.addFlashGlobalInfo("Update was successful.");
             } catch (Exception e) {
-                e.printStackTrace();
                 Messages.addGlobalError("Update was not successful.");
             }
         }
 
         PrimeFaces.current().executeScript("PF('manageTodoItemDialog').hide()");
-        PrimeFaces.current().ajax().update("form:messages", "form:dt-TodoItems");
+        PrimeFaces.current().ajax().update("form:messages", "form:growl", "form:dt-TodoItems");
     }
 
     public void onDelete() {
@@ -82,9 +80,8 @@ public class TodoItemCrudView implements Serializable {
             selectedTodoItem = null;
             Messages.addGlobalInfo("Delete was successful.");
             todoItemList = _todoItemMpRestClient.findAll();
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-TodoItems");
+            PrimeFaces.current().ajax().update("form:messages form:growl", "form:dt-TodoItems");
         } catch (Exception e) {
-            e.printStackTrace();
             Messages.addGlobalError("Delete not successful.");
         }
     }
