@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class OpenWeatherApiClientView implements Serializable {
 
     @Inject
-    @ConfigProperty(name = "org.openweathermap.api.apikey") // The name is defined in src/main/resources/META-INF/microprofile-config.properties file or an O/S environment variable
+    @ConfigProperty(name = "ORG_OPENWEATHERMAP_API_APIKEY") // The name is defined as a environment variable
     private String openweatherApiKey;
 
     @Inject
@@ -57,15 +57,15 @@ public class OpenWeatherApiClientView implements Serializable {
      * This method is used to handle exceptions and display root cause to user.
      * @param ex The Exception to handle.
      */
-//    protected void handleException (Exception ex){
-//        StringBuilder details = new StringBuilder();
-//        Throwable causes = ex;
-//        while(causes.getCause() != null){
-//            details.append(ex.getMessage());
-//            details.append("    Caused by:");
-//            details.append(causes.getCause().getMessage());
-//            causes = causes.getCause();
-//        }
-//        Messages.create(ex.getMessage()).detail(details.toString()).error().add("errors");
-//    }
+    protected void handleException (Exception ex){
+        StringBuilder details = new StringBuilder();
+        Throwable causes = ex;
+        while(causes.getCause() != null){
+            details.append(ex.getMessage());
+            details.append("    Caused by:");
+            details.append(causes.getCause().getMessage());
+            causes = causes.getCause();
+        }
+        Messages.create(ex.getMessage()).detail(details.toString()).error().add("errors");
+    }
 }
