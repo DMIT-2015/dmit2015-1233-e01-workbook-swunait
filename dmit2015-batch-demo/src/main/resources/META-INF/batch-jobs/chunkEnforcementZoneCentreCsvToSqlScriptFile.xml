@@ -14,11 +14,9 @@
     <!--    </listeners>-->
 
     <step id="step1">
-        <!--
-                <listeners>
-                    <listener ref="itemStepListener" />
-                </listeners>
-        -->
+        <listeners>
+            <listener ref="itemStepListener" />
+        </listeners>
         <chunk item-count="50">
             <reader ref="enforcementZoneCentreItemCsvFileReader" />
             <processor ref="enforcementZoneCentreStringToSqlStatementItemProcessor" />
